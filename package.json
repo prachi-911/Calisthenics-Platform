@@ -1,0 +1,26 @@
+{
+  "name": "calisthenics-platform-backend",
+  "version": "1.0.0",
+  "description": "Backend API for the Calisthenics Online Coaching Platform",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "calisthenics",
+    "nodejs",
+    "express",
+    "mongodb",
+    "react"
+  ],
+  "author": "Prachi Tailor",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.7.3",
+    "morgan": "^1.11.0"
+  }
+}
