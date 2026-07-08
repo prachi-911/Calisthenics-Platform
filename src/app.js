@@ -2,15 +2,27 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 
+const authRoutes = require("./routes/authRoutes");
+
 const app = express();
 
-// Middleware
+// =========================
+// Global Middleware
+// =========================
 app.use(morgan("dev"));
 app.use(cors());
+app.use(express.json());
 
-// Test Route
+// =========================
+// Health Check Route
+// =========================
 app.get("/", (req, res) => {
-    res.send("🚀 Calisthenics Platform Backend is Running...");
+  res.send("🚀 Calisthenics Platform Backend is Running...");
 });
+
+// =========================
+// API Routes
+// =========================
+app.use("/api/v1/auth", authRoutes);
 
 module.exports = app;
