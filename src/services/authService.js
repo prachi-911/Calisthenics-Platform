@@ -3,6 +3,7 @@ const {
   findByEmail,
   findByPhone,
 } = require("../repositories/userRepository");
+const { generateToken } = require("../utils/jwt");
 
 // Register User Service
 const registerUser = async (userData) => {
@@ -26,6 +27,10 @@ const registerUser = async (userData) => {
 
   // Create user
   const newUser = await createUser(userData);
+  const token = generateToken({
+  userId: newUser._id,
+  role: newUser.role,
+});
 
   // Remove password before sending response
   const userResponse = newUser.toObject();
@@ -34,6 +39,7 @@ const registerUser = async (userData) => {
   return {
     success: true,
     message: "User registered successfully 🎉",
+    token,
     data: userResponse,
   };
 };
