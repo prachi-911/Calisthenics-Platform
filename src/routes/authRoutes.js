@@ -3,6 +3,7 @@ const express = require("express");
 const {
   registerUser,
   loginUser,
+  getProfile,
 } = require("../controllers/authController");
 
 const {
@@ -11,10 +12,11 @@ const {
 } = require("../validators/authValidator");
 
 const validateRequest = require("../middlewares/validateRequest");
+const authenticateUser = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-// Register User
+// Register
 router.post(
   "/register",
   registerValidator,
@@ -22,12 +24,19 @@ router.post(
   registerUser
 );
 
-// Login User
+// Login
 router.post(
   "/login",
   loginValidator,
   validateRequest,
   loginUser
+);
+
+// Profile (Protected)
+router.get(
+  "/profile",
+  authenticateUser,
+  getProfile
 );
 
 module.exports = router;

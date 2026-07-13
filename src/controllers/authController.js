@@ -36,7 +36,17 @@ const loginUser = async (req, res) => {
     });
   }
 };
+
+// Get Current User Profile
+const getProfile = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Profile fetched successfully",
+    data: req.user,
+  });
+};
 module.exports = {
   registerUser,
   loginUser,
+  getProfile,
 };
