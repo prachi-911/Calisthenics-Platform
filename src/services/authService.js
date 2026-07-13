@@ -2,7 +2,9 @@ const {
   createUser,
   findByEmail,
   findByPhone,
+  findByEmailWithPassword,
 } = require("../repositories/userRepository");
+
 const { generateToken } = require("../utils/jwt");
 
 // Register User Service
@@ -43,7 +45,43 @@ const registerUser = async (userData) => {
     data: userResponse,
   };
 };
+// Login User Service
+const loginUser = async (loginData) => {
+  const { email, password } = loginData;
+
+  // Find user by email and include password
+  const user = await findByEmailWithPassword(email);
+
+  if (!user) {
+    throw new Error("Invalid email or password");
+  }
+
+  // Compare password
+  const isPasswordMatch = await user.comparePassword(password);
+
+  if (!isPasswordMatch) {
+    throw new Error("Invalid email or password");
+  }
+
+  // Generate JWT
+  const token = generateToken({
+    userId: user._id,
+    role: user.role,
+  });
+
+  // Remove password before sending response
+  const userResponse = user.toObject();
+  delete userResponse.password;
+
+  return {
+    success: true,
+    message: "Login successful 🎉",
+    token,
+    data: userResponse,
+  };
+};
 
 module.exports = {
   registerUser,
+  loginUser,
 };

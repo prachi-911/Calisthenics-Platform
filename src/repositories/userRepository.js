@@ -16,8 +16,14 @@ const findByPhone = async (phone) => {
   return await User.findOne({ phone });
 };
 
+// Find user by email and include password
+const findByEmailWithPassword = async (email) => {
+  return await User.findOne({ email }).select("+password");
+};
+
 module.exports = {
   createUser,
   findByEmail,
   findByPhone,
+  findByEmailWithPassword,
 };
