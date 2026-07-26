@@ -4,16 +4,21 @@ const {
   registerUser,
   loginUser,
   getProfile,
+  updateProfile,
+  changePassword,
+  uploadProfilePicture,
 } = require("../controllers/authController");
 
 const {
   registerValidator,
   loginValidator,
+  updateProfileValidator,
+  changePasswordValidator
 } = require("../validators/authValidator");
 
 const validateRequest = require("../middlewares/validateRequest");
 const authenticateUser = require("../middlewares/authMiddleware");
-
+const upload = require("../middlewares/upload");
 const router = express.Router();
 
 // Register
@@ -37,6 +42,28 @@ router.get(
   "/profile",
   authenticateUser,
   getProfile
+);
+
+// Update Profile (Protected)
+router.put(
+  "/profile",
+  authenticateUser,
+  updateProfileValidator,
+  validateRequest,
+  updateProfile
+);
+router.put(
+  "/change-password",
+  authenticateUser,
+  changePasswordValidator,
+  validateRequest,
+  changePassword
+);
+router.put(
+  "/profile-picture",
+  authenticateUser,
+  upload.single("profilePicture"),
+  uploadProfilePicture
 );
 
 module.exports = router;
