@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 const authRoutes = require("./routes/authRoutes");
-
+const subscriptionRoutes = require("./routes/subscriptionRoutes");
 const app = express();
 
 // =========================
@@ -24,5 +24,5 @@ app.get("/", (req, res) => {
 // API Routes
 // =========================
 app.use("/api/v1/auth", authRoutes);
-
+app.use("/api/v1/subscriptions", subscriptionRoutes);
 module.exports = app;
