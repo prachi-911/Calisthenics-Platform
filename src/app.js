@@ -4,6 +4,8 @@ const cors = require("cors");
 
 const authRoutes = require("./routes/authRoutes");
 const subscriptionRoutes = require("./routes/subscriptionRoutes");
+const workoutRoutes = require("./routes/workoutRoutes");
+
 const app = express();
 
 // =========================
@@ -25,4 +27,5 @@ app.get("/", (req, res) => {
 // =========================
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/subscriptions", subscriptionRoutes);
+app.use("/api/v1/workouts", workoutRoutes);
 module.exports = app;
