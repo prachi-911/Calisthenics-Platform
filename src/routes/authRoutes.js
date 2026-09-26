@@ -43,6 +43,11 @@ router.get(
   authenticateUser,
   getProfile
 );
+router.get(
+  "/me",
+  authenticateUser,
+  getProfile
+);
 
 // Update Profile (Protected)
 router.put(
