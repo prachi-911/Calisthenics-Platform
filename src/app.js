@@ -8,6 +8,7 @@ const workoutRoutes = require("./routes/workoutRoutes");
 const exerciseRoutes = require("./routes/exerciseRoutes");
 const programRoutes = require("./routes/programRoutes");
 const studentSubscriptionRoutes = require("./routes/studentSubscriptionRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/subscriptions", subscriptionRoutes);
 app.use("/api/v1/student-subscriptions", studentSubscriptionRoutes);
+app.use("/api/v1/payments", paymentRoutes);
 app.use("/api/v1/workouts", workoutRoutes);
 app.use("/api/v1/exercises", exerciseRoutes);
 app.use("/api/v1/programs", programRoutes);
