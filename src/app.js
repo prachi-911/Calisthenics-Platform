@@ -68,4 +68,19 @@ app.use("/api/v1/programs", programRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/search", searchRoutes);
 
+// =========================
+// 404 Not Found Handler
+// =========================
+const AppError = require("./utils/AppError");
+const errorHandler = require("./middlewares/errorHandler");
+
+app.use((req, res, next) => {
+  next(new AppError(`Cannot find ${req.originalUrl} on this server!`, 404));
+});
+
+// =========================
+// Centralized Error Handler
+// =========================
+app.use(errorHandler);
+
 module.exports = app;
