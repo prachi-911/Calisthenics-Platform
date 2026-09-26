@@ -69,6 +69,13 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/search", searchRoutes);
 
 // =========================
+// API Documentation (Swagger)
+// =========================
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./docs/swaggerSpec");
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// =========================
 // 404 Not Found Handler
 // =========================
 const AppError = require("./utils/AppError");
