@@ -15,6 +15,8 @@ const {
   uploadVideo,
   deleteFile,
 } = require("../utils/cloudinary");
+const Exercise = require("../models/Exercise");
+const APIFeatures = require("../utils/apiFeatures");
 
 // Create Exercise
 const createExerciseService = async (exerciseData) => {
@@ -34,27 +36,22 @@ const createExerciseService = async (exerciseData) => {
 };
 
 // Get All Exercises
-const getAllExercisesService = async (query = {}) => {
-  const filter = {};
+const getAllExercisesService = async (queryString = {}) => {
+  const features = new APIFeatures(
+    Exercise.find().populate("prerequisites", "name category difficulty"),
+    queryString
+  )
+    .filter(["name", "description", "targetMuscles", "category"])
+    .sort("progressionLevel")
+    .limitFields();
 
-  if (query.category) filter.category = query.category;
-  if (query.difficulty) filter.difficulty = query.difficulty;
-  if (query.mechanics) filter.mechanics = query.mechanics;
-  if (query.targetMuscle) {
-    filter.targetMuscles = { $regex: query.targetMuscle, $options: "i" };
-  }
-  if (query.isPremium !== undefined) {
-    filter.isPremium = query.isPremium === "true" || query.isPremium === true;
-  }
-  if (query.isActive !== undefined) {
-    filter.isActive = query.isActive === "true" || query.isActive === true;
-  }
-
-  const exercises = await getAllExercises(filter);
+  await features.paginate();
+  const exercises = await features.query;
 
   return {
     success: true,
     message: "Exercises fetched successfully",
+    pagination: features.paginationMeta,
     count: exercises.length,
     data: exercises,
   };

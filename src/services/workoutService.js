@@ -20,6 +20,8 @@ const {
   uploadVideo,
   deleteFile,
 } = require("../utils/cloudinary");
+const Workout = require("../models/Workout");
+const APIFeatures = require("../utils/apiFeatures");
 
 // Create Workout
 const createWorkoutService = async (workoutData) => {
@@ -39,12 +41,26 @@ const createWorkoutService = async (workoutData) => {
 };
 
 // Get All Workouts
-const getAllWorkoutsService = async () => {
-  const workouts = await getAllWorkouts();
+const getAllWorkoutsService = async (queryString = {}) => {
+  const features = new APIFeatures(
+    Workout.find().populate(
+      "exercises.exercise",
+      "name category difficulty targetMuscles thumbnail video"
+    ),
+    queryString
+  )
+    .filter(["workoutName", "description", "targetMuscle"])
+    .sort("-createdAt")
+    .limitFields();
+
+  await features.paginate();
+  const workouts = await features.query;
 
   return {
     success: true,
     message: "Workouts fetched successfully",
+    pagination: features.paginationMeta,
+    count: workouts.length,
     data: workouts,
   };
 };

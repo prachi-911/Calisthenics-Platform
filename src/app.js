@@ -10,6 +10,7 @@ const programRoutes = require("./routes/programRoutes");
 const studentSubscriptionRoutes = require("./routes/studentSubscriptionRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const searchRoutes = require("./routes/searchRoutes");
 
 const app = express();
 
@@ -38,5 +39,6 @@ app.use("/api/v1/workouts", workoutRoutes);
 app.use("/api/v1/exercises", exerciseRoutes);
 app.use("/api/v1/programs", programRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/search", searchRoutes);
 
 module.exports = app;

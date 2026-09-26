@@ -22,6 +22,8 @@ const {
   uploadImage,
   deleteFile,
 } = require("../utils/cloudinary");
+const Program = require("../models/Program");
+const APIFeatures = require("../utils/apiFeatures");
 
 // Create Program
 const createProgramService = async (programData, userId) => {
@@ -43,23 +45,24 @@ const createProgramService = async (programData, userId) => {
 };
 
 // Get All Programs
-const getAllProgramsService = async (query = {}) => {
-  const filter = {};
+const getAllProgramsService = async (queryString = {}) => {
+  const features = new APIFeatures(
+    Program.find()
+      .populate("createdBy", "fullName")
+      .populate("schedule.days.workout", "workoutName difficulty category duration thumbnail"),
+    queryString
+  )
+    .filter(["title", "description", "category", "level", "tags"])
+    .sort("-enrolledCount")
+    .limitFields();
 
-  if (query.level) filter.level = query.level;
-  if (query.category) filter.category = query.category;
-  if (query.isPremium !== undefined) {
-    filter.isPremium = query.isPremium === "true" || query.isPremium === true;
-  }
-  if (query.isPublished !== undefined) {
-    filter.isPublished = query.isPublished === "true" || query.isPublished === true;
-  }
-
-  const programs = await getAllPrograms(filter);
+  await features.paginate();
+  const programs = await features.query;
 
   return {
     success: true,
     message: "Programs fetched successfully",
+    pagination: features.paginationMeta,
     count: programs.length,
     data: programs,
   };

@@ -30,7 +30,7 @@ const createWorkout = async (req, res) => {
 // Get All Workouts
 const getAllWorkouts = async (req, res) => {
   try {
-    const result = await getAllWorkoutsService();
+    const result = await getAllWorkoutsService(req.query);
 
     return res.status(200).json(result);
   } catch (error) {
