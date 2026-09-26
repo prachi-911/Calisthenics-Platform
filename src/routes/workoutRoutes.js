@@ -8,11 +8,19 @@ const {
   uploadWorkoutThumbnail,
   uploadWorkoutVideo,
   deleteWorkout,
+  addExerciseToWorkout,
+  removeExerciseFromWorkout,
+  updateWorkoutExercise,
+  reorderWorkoutExercises,
+  getWorkoutExercises,
 } = require("../controllers/workoutController");
 
 const {
   workoutValidator,
   updateWorkoutValidator,
+  addExerciseToWorkoutValidator,
+  updateWorkoutExerciseValidator,
+  reorderExercisesValidator,
 } = require("../validators/workoutValidator");
 
 const authenticateUser = require("../middlewares/authMiddleware");
@@ -31,6 +39,9 @@ router.get("/", getAllWorkouts);
 
 // Get workout by ID
 router.get("/:id", getWorkoutById);
+
+// Get exercises of a workout
+router.get("/:id/exercises", getWorkoutExercises);
 
 // ===============================
 // Admin Routes
@@ -55,6 +66,45 @@ router.put(
   validateRequest,
   updateWorkout
 );
+
+// Add exercise to workout
+router.post(
+  "/:id/exercises",
+  authenticateUser,
+  authorizeRole("admin"),
+  addExerciseToWorkoutValidator,
+  validateRequest,
+  addExerciseToWorkout
+);
+
+// Reorder exercises in workout
+router.put(
+  "/:id/exercises-reorder",
+  authenticateUser,
+  authorizeRole("admin"),
+  reorderExercisesValidator,
+  validateRequest,
+  reorderWorkoutExercises
+);
+
+// Update specific exercise in workout
+router.put(
+  "/:id/exercises/:exerciseItemId",
+  authenticateUser,
+  authorizeRole("admin"),
+  updateWorkoutExerciseValidator,
+  validateRequest,
+  updateWorkoutExercise
+);
+
+// Remove exercise from workout
+router.delete(
+  "/:id/exercises/:exerciseItemId",
+  authenticateUser,
+  authorizeRole("admin"),
+  removeExerciseFromWorkout
+);
+
 // Upload Workout Thumbnail
 router.post(
   "/:id/thumbnail",

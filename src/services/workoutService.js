@@ -7,8 +7,13 @@ const {
   updateWorkout,
   updateWorkoutThumbnail,
   updateWorkoutVideo,
+  addExerciseToWorkout,
+  removeExerciseFromWorkout,
+  updateWorkoutExercise,
+  reorderWorkoutExercises,
   deleteWorkout,
 } = require("../repositories/workoutRepository");
+const { getExerciseById } = require("../repositories/exerciseRepository");
 
 const {
   uploadImage,
@@ -181,6 +186,107 @@ const deleteWorkoutService = async (workoutId) => {
   };
 };
 
+// Add Exercise To Workout
+const addExerciseToWorkoutService = async (workoutId, exerciseData) => {
+  const workout = await getWorkoutById(workoutId);
+  if (!workout) {
+    throw new Error("Workout not found");
+  }
+
+  const exercise = await getExerciseById(exerciseData.exerciseId);
+  if (!exercise) {
+    throw new Error("Exercise not found");
+  }
+
+  // Determine order if not specified
+  const order = exerciseData.order || (workout.exercises.length + 1);
+
+  const exerciseItem = {
+    exercise: exerciseData.exerciseId,
+    sets: exerciseData.sets || 3,
+    reps: exerciseData.reps || 0,
+    duration: exerciseData.duration || 0,
+    restTime: exerciseData.restTime || 60,
+    order,
+    notes: exerciseData.notes || "",
+  };
+
+  const updatedWorkout = await addExerciseToWorkout(workoutId, exerciseItem);
+
+  return {
+    success: true,
+    message: "Exercise added to workout successfully 🎉",
+    data: updatedWorkout,
+  };
+};
+
+// Remove Exercise From Workout
+const removeExerciseFromWorkoutService = async (workoutId, exerciseItemId) => {
+  const workout = await getWorkoutById(workoutId);
+  if (!workout) {
+    throw new Error("Workout not found");
+  }
+
+  const updatedWorkout = await removeExerciseFromWorkout(workoutId, exerciseItemId);
+
+  return {
+    success: true,
+    message: "Exercise removed from workout successfully 🗑️",
+    data: updatedWorkout,
+  };
+};
+
+// Update Workout Exercise
+const updateWorkoutExerciseService = async (workoutId, exerciseItemId, updateData) => {
+  const workout = await getWorkoutById(workoutId);
+  if (!workout) {
+    throw new Error("Workout not found");
+  }
+
+  const updatedWorkout = await updateWorkoutExercise(workoutId, exerciseItemId, updateData);
+  if (!updatedWorkout) {
+    throw new Error("Exercise item not found in this workout");
+  }
+
+  return {
+    success: true,
+    message: "Workout exercise updated successfully 🎉",
+    data: updatedWorkout,
+  };
+};
+
+// Reorder Workout Exercises
+const reorderWorkoutExercisesService = async (workoutId, exercises) => {
+  const workout = await getWorkoutById(workoutId);
+  if (!workout) {
+    throw new Error("Workout not found");
+  }
+
+  const updatedWorkout = await reorderWorkoutExercises(workoutId, exercises);
+
+  return {
+    success: true,
+    message: "Workout exercises reordered successfully 🎉",
+    data: updatedWorkout,
+  };
+};
+
+// Get Workout Exercises
+const getWorkoutExercisesService = async (workoutId) => {
+  const workout = await getWorkoutById(workoutId);
+  if (!workout) {
+    throw new Error("Workout not found");
+  }
+
+  return {
+    success: true,
+    message: "Workout exercises fetched successfully",
+    workoutName: workout.workoutName,
+    count: workout.exercises.length,
+    data: workout.exercises,
+  };
+};
+
 module.exports = {
   createWorkoutService,
   getAllWorkoutsService,
@@ -189,4 +295,9 @@ module.exports = {
   uploadWorkoutThumbnailService,
   uploadWorkoutVideoService,
   deleteWorkoutService,
+  addExerciseToWorkoutService,
+  removeExerciseFromWorkoutService,
+  updateWorkoutExerciseService,
+  reorderWorkoutExercisesService,
+  getWorkoutExercisesService,
 };

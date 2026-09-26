@@ -82,6 +82,42 @@ video: {
       default: false,
     },
 
+    exercises: [
+      {
+        exercise: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Exercise",
+          required: true,
+        },
+        sets: {
+          type: Number,
+          required: true,
+          min: 1,
+          default: 3,
+        },
+        reps: {
+          type: Number,
+          default: 0,
+        },
+        duration: {
+          type: Number,
+          default: 0,
+        },
+        restTime: {
+          type: Number,
+          default: 60,
+        },
+        order: {
+          type: Number,
+          default: 1,
+        },
+        notes: {
+          type: String,
+          default: "",
+        },
+      },
+    ],
+
     isActive: {
       type: Boolean,
       default: true,

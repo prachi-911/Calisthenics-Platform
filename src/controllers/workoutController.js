@@ -6,6 +6,11 @@ const {
   uploadWorkoutThumbnailService,
   uploadWorkoutVideoService,
   deleteWorkoutService,
+  addExerciseToWorkoutService,
+  removeExerciseFromWorkoutService,
+  updateWorkoutExerciseService,
+  reorderWorkoutExercisesService,
+  getWorkoutExercisesService,
 } = require("../services/workoutService");
 
 // Create Workout
@@ -127,6 +132,81 @@ const deleteWorkout = async (req, res) => {
   }
 };
 
+// Add Exercise to Workout
+const addExerciseToWorkout = async (req, res) => {
+  try {
+    const result = await addExerciseToWorkoutService(req.params.id, req.body);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Remove Exercise from Workout
+const removeExerciseFromWorkout = async (req, res) => {
+  try {
+    const result = await removeExerciseFromWorkoutService(
+      req.params.id,
+      req.params.exerciseItemId
+    );
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Update Workout Exercise
+const updateWorkoutExercise = async (req, res) => {
+  try {
+    const result = await updateWorkoutExerciseService(
+      req.params.id,
+      req.params.exerciseItemId,
+      req.body
+    );
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Reorder Workout Exercises
+const reorderWorkoutExercises = async (req, res) => {
+  try {
+    const result = await reorderWorkoutExercisesService(
+      req.params.id,
+      req.body.exercises
+    );
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Get Workout Exercises
+const getWorkoutExercises = async (req, res) => {
+  try {
+    const result = await getWorkoutExercisesService(req.params.id);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createWorkout,
   getAllWorkouts,
@@ -135,4 +215,9 @@ module.exports = {
   uploadWorkoutThumbnail,
   uploadWorkoutVideo,
   deleteWorkout,
+  addExerciseToWorkout,
+  removeExerciseFromWorkout,
+  updateWorkoutExercise,
+  reorderWorkoutExercises,
+  getWorkoutExercises,
 };

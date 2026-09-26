@@ -122,8 +122,85 @@ const updateWorkoutValidator = [
     .withMessage("isActive must be true or false"),
 ];
 
+const addExerciseToWorkoutValidator = [
+  body("exerciseId")
+    .isMongoId()
+    .withMessage("Valid exercise ID is required"),
+
+  body("sets")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("Sets must be an integer of at least 1"),
+
+  body("reps")
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage("Reps must be 0 or more"),
+
+  body("duration")
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage("Duration must be 0 or more seconds"),
+
+  body("restTime")
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage("Rest time must be 0 or more seconds"),
+
+  body("order")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("Order must be at least 1"),
+
+  body("notes")
+    .optional()
+    .isString()
+    .withMessage("Notes must be a string"),
+];
+
+const updateWorkoutExerciseValidator = [
+  body("sets")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("Sets must be an integer of at least 1"),
+
+  body("reps")
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage("Reps must be 0 or more"),
+
+  body("duration")
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage("Duration must be 0 or more seconds"),
+
+  body("restTime")
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage("Rest time must be 0 or more seconds"),
+
+  body("order")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("Order must be at least 1"),
+
+  body("notes")
+    .optional()
+    .isString()
+    .withMessage("Notes must be a string"),
+];
+
+const reorderExercisesValidator = [
+  body("exercises")
+    .isArray({ min: 1 })
+    .withMessage("Exercises array is required"),
+];
+
 module.exports = {
   workoutValidator,
   createWorkoutValidator: workoutValidator,
   updateWorkoutValidator,
+  addExerciseToWorkoutValidator,
+  updateWorkoutExerciseValidator,
+  reorderExercisesValidator,
 };
