@@ -12,14 +12,39 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 
+const helmet = require("helmet");
+const hpp = require("hpp");
+const mongoSanitize = require("./middlewares/mongoSanitize");
+const { generalLimiter, authLimiter, paymentLimiter } = require("./middlewares/rateLimiter");
+
 const app = express();
 
 // =========================
-// Global Middleware
+// Security & Global Middlewares
 // =========================
-app.use(morgan("dev"));
+// Set secure HTTP headers
+app.use(helmet());
+
+// Cross-Origin Resource Sharing
 app.use(cors());
-app.use(express.json());
+
+// Development logging
+if (process.env.NODE_ENV !== "test") {
+  app.use(morgan("dev"));
+}
+
+// Body parser with size limits
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// Prevent NoSQL query injection
+app.use(mongoSanitize);
+
+// Prevent HTTP parameter pollution
+app.use(hpp());
+
+// Apply rate limiting to all /api requests
+app.use("/api", generalLimiter);
 
 // =========================
 // Health Check Route
@@ -31,10 +56,12 @@ app.get("/", (req, res) => {
 // =========================
 // API Routes
 // =========================
+app.use("/api/v1/auth/login", authLimiter);
+app.use("/api/v1/auth/register", authLimiter);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/subscriptions", subscriptionRoutes);
 app.use("/api/v1/student-subscriptions", studentSubscriptionRoutes);
-app.use("/api/v1/payments", paymentRoutes);
+app.use("/api/v1/payments", paymentLimiter, paymentRoutes);
 app.use("/api/v1/workouts", workoutRoutes);
 app.use("/api/v1/exercises", exerciseRoutes);
 app.use("/api/v1/programs", programRoutes);
