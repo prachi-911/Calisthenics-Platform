@@ -131,4 +131,10 @@ const programSchema = new mongoose.Schema(
   }
 );
 
+// Database Indexes for Performance Optimization
+programSchema.index({ level: 1, category: 1 });
+programSchema.index({ isPremium: 1, isPublished: 1 });
+programSchema.index({ enrolledCount: -1 });
+programSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model("Program", programSchema);

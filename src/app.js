@@ -14,6 +14,7 @@ const searchRoutes = require("./routes/searchRoutes");
 
 const helmet = require("helmet");
 const hpp = require("hpp");
+const compression = require("compression");
 const mongoSanitize = require("./middlewares/mongoSanitize");
 const { generalLimiter, authLimiter, paymentLimiter } = require("./middlewares/rateLimiter");
 
@@ -22,6 +23,9 @@ const app = express();
 // =========================
 // Security & Global Middlewares
 // =========================
+// HTTP response compression
+app.use(compression());
+
 // Set secure HTTP headers
 app.use(helmet());
 

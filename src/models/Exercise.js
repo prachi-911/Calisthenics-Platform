@@ -116,4 +116,10 @@ const exerciseSchema = new mongoose.Schema(
   }
 );
 
+// Database Indexes for Performance Optimization
+exerciseSchema.index({ category: 1, difficulty: 1 });
+exerciseSchema.index({ progressionLevel: 1 });
+exerciseSchema.index({ isPremium: 1, isActive: 1 });
+exerciseSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model("Exercise", exerciseSchema);

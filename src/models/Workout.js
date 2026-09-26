@@ -128,4 +128,9 @@ video: {
   }
 );
 
+// Database Indexes for Performance Optimization
+workoutSchema.index({ category: 1, difficulty: 1 });
+workoutSchema.index({ isPremium: 1, isActive: 1 });
+workoutSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model("Workout", workoutSchema);
